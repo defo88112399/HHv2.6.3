@@ -1,8 +1,3 @@
-while not game:IsLoaded() or not game:GetService("CoreGui") or not game:GetService("Players").LocalPlayer or not game:GetService("Players").LocalPlayer.PlayerGui or not game:GetService("CoreGui"):FindFirstChild("TopBarApp") or not game:GetService("CoreGui"):FindFirstChild("PlayerList") or not game.Players.LocalPlayer.Character do task.wait(0.03) end
-local on = true -- Change to false if you want script to not run.
-if not on then return end
-if game.PlaceId ~= 823323202 then return end
-
 local ScreenGui = Instance.new("ScreenGui")
 local HunterHubv2 = Instance.new("Frame")
 local Title = Instance.new("TextLabel")
