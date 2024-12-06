@@ -1260,7 +1260,7 @@ TextLabel_16.BorderSizePixel = 0
 TextLabel_16.Position = UDim2.new(0.484472036, 0, 0.661252975, 0)
 TextLabel_16.Size = UDim2.new(0.344720483, 0, 0.0556844585, 0)
 TextLabel_16.Font = Enum.Font.Merriweather
-TextLabel_16.Text = "NNinjutsu:"
+TextLabel_16.Text = "HoldToShoot"
 TextLabel_16.TextColor3 = Color3.fromRGB(255, 255, 255)
 TextLabel_16.TextScaled = true
 TextLabel_16.TextSize = 14.000
@@ -1279,7 +1279,7 @@ AllShuriken_2.TextColor3 = Color3.fromRGB(255, 0, 0)
 AllShuriken_2.TextScaled = true
 AllShuriken_2.TextSize = 14.000
 AllShuriken_2.TextWrapped = true
-AllShuriken_2.MouseButton1Down:Connect(toggleMainScript)
+
 local clickInterval = 0
 local autoClickerEnabled = false
 local lastClickTime = 0
@@ -1291,7 +1291,7 @@ local runService = game:GetService("RunService")
 local mainScriptEnabled = false
 
 local function autoClick()
-    localplayer = game.Players.LocalPlayer
+    local player = game.Players.LocalPlayer
     local mouse = player:GetMouse()
     local clickPosition = Vector2.new(mouse.X, mouse.Y)
     
@@ -1301,10 +1301,9 @@ local function autoClick()
 end
 
 local function onInputBegan(input, gameProcessedEvent)
-    if gameProcessedEvent then return end
-
-    if input.UserInputType == Enum.UserInputType.MouseButton1 or 
-       input.UserInputType == Enum.UserInputType.Touch then
+    if not gameProcessedEvent and 
+       (input.UserInputType == Enum.UserInputType.MouseButton1 or 
+        input.UserInputType == Enum.UserInputType.Touch) then
         autoClickerEnabled = true
     end
 end
@@ -1319,7 +1318,7 @@ end
 userInputService.InputBegan:Connect(onInputBegan)
 userInputService.InputEnded:Connect(onInputEnded)
 
-runService.Heartbeat:Connect(function(step)
+runService.Heartbeat:Connect(function()
     if mainScriptEnabled and autoClickerEnabled and tick() - lastClickTime >= clickInterval then
         autoClick()
         lastClickTime = tick()
@@ -1328,14 +1327,11 @@ end)
 
 local function toggleMainScript()
     mainScriptEnabled = not mainScriptEnabled
-    if mainScriptEnabled then
-        AllShuriken_2.Text = "On"
-        AllShuriken_2.TextColor3 = Color3.fromRGB(0, 255, 0)
-    else
-        AllShuriken_2.Text = "Off"
-        AllShuriken_2.TextColor3 = Color3.fromRGB(255, 0, 0)
-    end
+    AllShuriken_2.Text = mainScriptEnabled and "On" or "Off"
+    AllShuriken_2.TextColor3 = mainScriptEnabled and Color3.fromRGB(0, 255, 0) or Color3.fromRGB(255, 0, 0)
 end
+
+AllShuriken_2.MouseButton1Down:Connect(toggleMainScript)
 
 UITextSizeConstraint_32.Parent = AllShuriken_2
 UITextSizeConstraint_32.MaxTextSize = 14
