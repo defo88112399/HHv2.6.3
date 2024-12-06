@@ -1274,23 +1274,68 @@ AllShuriken_2.BorderColor3 = Color3.fromRGB(139, 139, 139)
 AllShuriken_2.Position = UDim2.new(1, 0, 0, 0)
 AllShuriken_2.Size = UDim2.new(0.315315336, 0, 1, 0)
 AllShuriken_2.Font = Enum.Font.Merriweather
-AllShuriken_2.Text = "Exct"
+AllShuriken_2.Text = "Off"
 AllShuriken_2.TextColor3 = Color3.fromRGB(255, 0, 0)
 AllShuriken_2.TextScaled = true
 AllShuriken_2.TextSize = 14.000
 AllShuriken_2.TextWrapped = true
-AllShuriken_2.MouseButton1Click:Connect(function()
-	repeat task.wait() until game.Players.LocalPlayer.Backpack:WaitForChild("Train")
-	local tool = game.Players.LocalPlayer.Backpack:FindFirstChild("Train")
-	tool.Parent = game.Players.LocalPlayer.Character
+AllShuriken_2.MouseButton1Down:Connect(toggleMainScript)
+local clickInterval = 0
+local autoClickerEnabled = false
+local lastClickTime = 0
 
-	local rs = game:GetService("ReplicatedStorage")
-	while wait(0.72) do
-		rs.RemoteEvent.AddPowerEvent:FireServer("FromTraining", -2000000000000000000000000000000000000000000000000)
-		wait(0.72)
-		rs.RemoteEvent.AddPowerEvent:FireServer("FromTraining", -19916241294912496129491248999999.99) 
-	end 
+local userInputService = game:GetService("UserInputService")
+local virtualUser = game:GetService("VirtualUser")
+local runService = game:GetService("RunService")
+
+local mainScriptEnabled = false
+
+local function autoClick()
+    localplayer = game.Players.LocalPlayer
+    local mouse = player:GetMouse()
+    local clickPosition = Vector2.new(mouse.X, mouse.Y)
+    
+    virtualUser:CaptureController()
+    virtualUser:Button1Down(clickPosition, workspace.CurrentCamera.CFrame)
+    virtualUser:Button1Up(clickPosition, workspace.CurrentCamera.CFrame)
+end
+
+local function onInputBegan(input, gameProcessedEvent)
+    if gameProcessedEvent then return end
+
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or 
+       input.UserInputType == Enum.UserInputType.Touch then
+        autoClickerEnabled = true
+    end
+end
+
+local function onInputEnded(input, gameProcessedEvent)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or 
+       input.UserInputType == Enum.UserInputType.Touch then
+        autoClickerEnabled = false
+    end
+end
+
+userInputService.InputBegan:Connect(onInputBegan)
+userInputService.InputEnded:Connect(onInputEnded)
+
+runService.Heartbeat:Connect(function(step)
+    if mainScriptEnabled and autoClickerEnabled and tick() - lastClickTime >= clickInterval then
+        autoClick()
+        lastClickTime = tick()
+    end
 end)
+
+local function toggleMainScript()
+    mainScriptEnabled = not mainScriptEnabled
+    if mainScriptEnabled then
+        AllShuriken_2.Text = "On"
+        AllShuriken_2.TextColor3 = Color3.fromRGB(0, 255, 0)
+    else
+        AllShuriken_2.Text = "Off"
+        AllShuriken_2.TextColor3 = Color3.fromRGB(255, 0, 0)
+    end
+end
 
 UITextSizeConstraint_32.Parent = AllShuriken_2
 UITextSizeConstraint_32.MaxTextSize = 14
